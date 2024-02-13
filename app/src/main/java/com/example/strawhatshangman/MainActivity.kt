@@ -10,6 +10,12 @@ import android.util.Log
 class MainActivity : AppCompatActivity() {
 
     private val letterButtons: MutableList<Button> = mutableListOf()
+    private val wordBank: Map<String, List<String>> = mapOf(
+        "fruit" to listOf("apple", "banana", "orange", "mango"),
+        "drinks" to listOf("pepsi", "sprite", "fanta", "coke"),
+        "food" to listOf("pizza", "hotdog", "burger", "sandwich"),
+        "cars" to listOf("audi", "toyota", "mercedes", "lexus")
+    )
     @SuppressLint("DiscouragedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +28,7 @@ class MainActivity : AppCompatActivity() {
             letterButtons.add(button)
         }
 
+        // OnClickListener for all the buttons
         val letterButtonClickListener = View.OnClickListener { view ->
             val buttonPressed: Button = view as Button
             buttonPressed.animate().alpha(0f).withEndAction {
@@ -29,6 +36,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Map all letter buttons to letterButtonClickListener
         letterButtons.map { button -> button.setOnClickListener(letterButtonClickListener) }
     }
+
+
 }
