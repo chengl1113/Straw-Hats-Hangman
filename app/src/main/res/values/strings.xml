@@ -31,4 +31,5 @@
     <string name="LETTER_Z">Z</string>
     <string name="hint_unavailable">Hint is not available</string>
     <string name="player_win">You won!</string>
+    <string name="player_lost">You lost</string>
 </resources>

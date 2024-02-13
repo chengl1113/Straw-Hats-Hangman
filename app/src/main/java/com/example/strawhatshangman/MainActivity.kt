@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 if (letter !in word) {
                     // Add a body part to image
                     incorrect++
-                    incrementDrawing(gameImage, incorrect)
+                    incrementDrawing(view, gameImage, incorrect)
                 }
                 // Player guesses right
                 else {
@@ -123,11 +123,11 @@ class MainActivity : AppCompatActivity() {
             else {
                 incorrect++
                 when (hintClicks) {
-                    1 -> { hintTextView.setText(category)}
+                    1 -> { hintTextView.setText("Hint: " + category)}
                     2 -> {removeHalfOfLetters(letterButtons, word)}
                     3 -> {correct += showAllVowels(textViewList, word, letterButtons)}
                 }
-                incrementDrawing(gameImage, incorrect)
+                incrementDrawing(view, gameImage, incorrect)
             }
         }
     }
@@ -174,14 +174,24 @@ class MainActivity : AppCompatActivity() {
         return revealed
     }
 
-    private fun incrementDrawing(image: ImageView, incorrect: Int) {
+    private fun incrementDrawing(view: View, image: ImageView, incorrect: Int) {
         when (incorrect) {
             1 -> image.setImageResource(R.drawable.screen2)
             2 -> image.setImageResource(R.drawable.screen3)
             3 -> image.setImageResource(R.drawable.screen4)
             4 -> image.setImageResource(R.drawable.screen5)
             5 -> image.setImageResource(R.drawable.screen6)
-            6 -> image.setImageResource(R.drawable.screen7)
+            6 -> {image.setImageResource(R.drawable.screen7)
+                // Player loses
+                val snackbar = Snackbar.make(view, R.string.player_lost, Snackbar.LENGTH_INDEFINITE)
+                snackbar.setAction("Play Again", View.OnClickListener {
+                    // Handle the action click here
+                    // For example, you can perform an action or dismiss the Snackbar
+                    snackbar.dismiss()
+                    recreate()
+                })
+                snackbar.show()
+            }
         }
     }
 
@@ -194,11 +204,11 @@ class MainActivity : AppCompatActivity() {
         // Player completed the word
         if (correct == word.length) {
             val snackbar = Snackbar.make(view, R.string.player_win, Snackbar.LENGTH_INDEFINITE)
-            snackbar.setAction("Action", View.OnClickListener {
+            snackbar.setAction("Play Again", View.OnClickListener {
                 // Handle the action click here
                 // For example, you can perform an action or dismiss the Snackbar
                 snackbar.dismiss()
-                initializeUI()
+                recreate()
             })
             snackbar.show()
         }
