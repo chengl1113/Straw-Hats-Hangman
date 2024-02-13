@@ -29,4 +29,5 @@
     <string name="LETTER_X">X</string>
     <string name="LETTER_Y">Y</string>
     <string name="LETTER_Z">Z</string>
+    <string name="hint_unavailable">Hint is not available</string>
 </resources>
