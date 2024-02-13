@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         val hintButton: Button = findViewById(R.id.hint_button)
         var hintClicks: Int = 0
         var incorrect: Int = 0
+        var correct: Int = 0
 
         // Generate the boxes for the letters
         val textViewList: MutableList<TextView> = mutableListOf()
@@ -102,7 +104,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 // Player guesses right
                 else {
-                    processCorrectGuess(letter, word, textViewList)
+                    correct++
+                    processCorrectGuess(view, letter, word, textViewList, correct)
                 }
             }
         }
@@ -122,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                 when (hintClicks) {
                     1 -> { hintTextView.setText(category)}
                     2 -> {removeHalfOfLetters(letterButtons, word)}
-                    3 -> {showAllVowels(textViewList, word, letterButtons)}
+                    3 -> {correct += showAllVowels(textViewList, word, letterButtons)}
                 }
                 incrementDrawing(gameImage, incorrect)
             }
@@ -149,10 +152,11 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Removing half of letters", Toast.LENGTH_SHORT).show()
     }
 
-    private fun showAllVowels(textViewList : MutableList<TextView>, word : String, letterButtons: MutableList<Button>) {
+    private fun showAllVowels(textViewList : MutableList<TextView>, word : String, letterButtons: MutableList<Button>): Int {
         Toast.makeText(this, "Showing all vowels", Toast.LENGTH_SHORT).show()
         val vowels = arrayOf('A', 'E', 'I', 'O', 'U')
         var count = 0
+        var revealed = 0
         for (char in word) {
             if (char in vowels) {
                 textViewList[count].text = char.toString()
@@ -163,9 +167,11 @@ class MainActivity : AppCompatActivity() {
                     curButton.isEnabled = false
                     letterButtons.remove(curButton)
                 }
+                revealed++
             }
             count++
         }
+        return revealed
     }
 
     private fun incrementDrawing(image: ImageView, incorrect: Int) {
@@ -179,11 +185,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun processCorrectGuess(letter: String, word: String, textViewList: MutableList<TextView>) {
+    private fun processCorrectGuess(view: View, letter: String, word: String, textViewList: MutableList<TextView>, correct: Int) {
         for ((index, char) in word.withIndex()) {
             if (char.toString() == letter) {
                 textViewList[index].setText(letter)
             }
+        }
+        // Player completed the word
+        if (correct == word.length) {
+            val snackbar = Snackbar.make(view, R.string.player_win, Snackbar.LENGTH_INDEFINITE)
+            snackbar.setAction("Action", View.OnClickListener {
+                // Handle the action click here
+                // For example, you can perform an action or dismiss the Snackbar
+                snackbar.dismiss()
+                initializeUI()
+            })
+            snackbar.show()
         }
     }
 
