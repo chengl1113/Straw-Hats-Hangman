@@ -2,6 +2,7 @@
     <string name="app_name">[Straw Hats] Hangman</string>
     <string name="CHOOSE_STRING">CHOOSE A LETTER</string>
     <string name="HINT">HINT: </string>
+    <string name="HINT_BUTTON">SHOW HINT</string>
     <string name="LETTER_A">A</string>
     <string name="LETTER_B">B</string>
     <string name="LETTER_C">C</string>
