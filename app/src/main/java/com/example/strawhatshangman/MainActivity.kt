@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -38,8 +39,42 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val randomElement: Pair<String, String> = wordBank.toList().random()
+        // Use this variable to reveal when user wants hint
+        val category : String = randomElement.first
+        // Use this variable to compare with user input(button clicks)
+        val word : String = randomElement.second
         // Grab the picture
         val gameImage: ImageView = findViewById(R.id.game_image)
+        val hintTextView: TextView = findViewById(R.id.hint_text_view)
+        val hintButton: Button = findViewById(R.id.hint_button)
+        var hintClicks: Int = 0
+        var incorrect: Int = 0
+
+        // Generate the boxes for the letters
+        val textViewList: MutableList<TextView> = mutableListOf()
+        for (char in word) {
+            // Create new TextView and give it its layout
+            val textView = TextView(this)
+            textViewList.add(textView)
+            textView.text = ""
+            val layoutParams = LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+            )
+            textView.text = ""
+            layoutParams.weight = 1f
+            textView.layoutParams = layoutParams
+            textView.textSize = 36f
+            textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            textView.gravity = Gravity.CENTER
+            textView.paintFlags = textView.paintFlags
+            textView.setBackgroundResource(R.drawable.bottom_border)
+
+            val wordReveal : LinearLayout = findViewById(R.id.word_reveal)
+
+            wordReveal.addView(textView)
+        }
 
         // Add all buttons to letterButtons
         for (i in 65..90) { // Change the range as needed
@@ -55,46 +90,27 @@ class MainActivity : AppCompatActivity() {
                 val letter = buttonPressed.text.toString()
                 buttonPressed.isEnabled = false
                 letterButtons.remove(buttonPressed)
+                // Player guesses wrong
+                if (letter !in word) {
+                    // Add a body part to image
+                    incorrect++
+                    incrementDrawing(gameImage, incorrect)
+                }
+                // Player guesses right
+                else {
+                    processCorrectGuess(letter, word, textViewList)
+                }
             }
         }
 
         // Map all letter buttons to letterButtonClickListener
         letterButtons.map { button -> button.setOnClickListener(letterButtonClickListener) }
 
-        val randomElement: Pair<String, String> = wordBank.toList().random()
-
-        // Use this variable to reveal when user wants hint
-        val category : String = randomElement.first
-
-        // Use this variable to compare with user input(button clicks)
-        val word : String = randomElement.second
-
         Toast.makeText(this, word, Toast.LENGTH_SHORT).show()
 
-        // Generate the boxes for the letters
-        val textViewList: MutableList<TextView> = mutableListOf()
-        for (char in word) {
-            val textView = TextView(this)
-            textViewList.add(textView)
-            textView.text = ""
-            val layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-            )
-            layoutParams.weight = 1f
-            textView.layoutParams = layoutParams
-            textView.textSize = 36f
-            textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-            textView.setBackgroundResource(R.drawable.bottom_border)
-            val wordReveal : LinearLayout = findViewById(R.id.word_reveal)
-            wordReveal.addView(textView)
-        }
 
-        val hintTextView: TextView = findViewById(R.id.hint_text_view)
-        hintTextView.textSize
-        val hintButton: Button = findViewById(R.id.hint_button)
-        var hintClicks: Int = 0
-        var incorrect: Int = 0
+
+
         hintButton.setOnClickListener { view: View ->
             hintClicks++
             if (hintClicks > 3 || incorrect == 5) {
@@ -105,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 when (hintClicks) {
                     1 -> { hintTextView.setText(category)}
                     2 -> {removeHalfOfLetters(letterButtons, word)}
-                    3 -> {showAllVowels(textViewList, word)}
+                    3 -> {showAllVowels(textViewList, word, letterButtons)}
                 }
                 incrementDrawing(gameImage, incorrect)
             }
@@ -132,13 +148,20 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Removing half of letters", Toast.LENGTH_SHORT).show()
     }
 
-    private fun showAllVowels(textViewList : MutableList<TextView>, word : String) {
+    private fun showAllVowels(textViewList : MutableList<TextView>, word : String, letterButtons: MutableList<Button>) {
         Toast.makeText(this, "Showing all vowels", Toast.LENGTH_SHORT).show()
         val vowels = arrayOf('A', 'E', 'I', 'O', 'U')
         var count = 0
         for (char in word) {
             if (char in vowels) {
                 textViewList[count].text = char.toString()
+                // Remove the button from letterButtons
+                val buttonId = resources.getIdentifier("LETTER_$char","id", packageName)
+                val curButton = findViewById<Button>(buttonId)
+                curButton.animate().alpha(0f).withEndAction {
+                    curButton.isEnabled = false
+                    letterButtons.remove(curButton)
+                }
             }
             count++
         }
@@ -155,5 +178,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    private fun processCorrectGuess(letter: String, word: String, textViewList: MutableList<TextView>) {
+        for ((index, char) in word.withIndex()) {
+            if (char.toString() == letter) {
+                textViewList[index].setText(letter)
+            }
+        }
+    }
 }
