@@ -280,7 +280,7 @@
                 android:text="@string/HINT_BUTTON" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/hint_text_view"
                 android:layout_width="388dp"
                 android:layout_height="44dp"
                 android:text="@string/HINT"
