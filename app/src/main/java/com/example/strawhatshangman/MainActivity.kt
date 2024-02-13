@@ -72,8 +72,10 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, word, Toast.LENGTH_SHORT).show()
 
         // Generate the boxes for the letters
+        val textViewList: MutableList<TextView> = mutableListOf()
         for (char in word) {
             val textView = TextView(this)
+            textViewList.add(textView)
             textView.text = ""
             val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -103,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 when (hintClicks) {
                     1 -> { hintTextView.setText(category)}
                     2 -> {removeHalfOfLetters(letterButtons, word)}
-                    3 -> {showAllVowels()}
+                    3 -> {showAllVowels(textViewList, word)}
                 }
                 incrementDrawing(gameImage, incorrect)
             }
@@ -130,8 +132,16 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Removing half of letters", Toast.LENGTH_SHORT).show()
     }
 
-    private fun showAllVowels() {
+    private fun showAllVowels(textViewList : MutableList<TextView>, word : String) {
         Toast.makeText(this, "Showing all vowels", Toast.LENGTH_SHORT).show()
+        val vowels = arrayOf('A', 'E', 'I', 'O', 'U')
+        var count = 0
+        for (char in word) {
+            if (char in vowels) {
+                textViewList[count].text = char.toString()
+            }
+            count++
+        }
     }
 
     private fun incrementDrawing(image: ImageView, incorrect: Int) {
