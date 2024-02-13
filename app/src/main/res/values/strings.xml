@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">[Straw Hats] Hangman</string>
+    <string name="CHOOSE_STRING">CHOOSE A LETTER</string>
+    <string name="HINT">HINT: </string>
+    <string name="LETTER_A">A</string>
+    <string name="LETTER_B">B</string>
+    <string name="LETTER_C">C</string>
+    <string name="LETTER_D">D</string>
+    <string name="LETTER_E">E</string>
+    <string name="LETTER_F">F</string>
+    <string name="LETTER_G">G</string>
+    <string name="LETTER_H">H</string>
+    <string name="LETTER_I">I</string>
+    <string name="LETTER_J">J</string>
+    <string name="LETTER_K">K</string>
+    <string name="LETTER_L">L</string>
+    <string name="LETTER_M">M</string>
+    <string name="LETTER_N">N</string>
+    <string name="LETTER_O">O</string>
+    <string name="LETTER_P">P</string>
+    <string name="LETTER_Q">Q</string>
+    <string name="LETTER_R">R</string>
+    <string name="LETTER_S">S</string>
+    <string name="LETTER_T">T</string>
+    <string name="LETTER_U">U</string>
+    <string name="LETTER_V">V</string>
+    <string name="LETTER_W">W</string>
+    <string name="LETTER_X">X</string>
+    <string name="LETTER_Y">Y</string>
+    <string name="LETTER_Z">Z</string>
 </resources>
