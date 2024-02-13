@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initializeUI()
+        }
+
+    private fun initializeUI() {
         val randomElement: Pair<String, String> = wordBank.toList().random()
         // Use this variable to reveal when user wants hint
         val category : String = randomElement.first
@@ -107,9 +111,6 @@ class MainActivity : AppCompatActivity() {
         letterButtons.map { button -> button.setOnClickListener(letterButtonClickListener) }
 
         Toast.makeText(this, word, Toast.LENGTH_SHORT).show()
-
-
-
 
         hintButton.setOnClickListener { view: View ->
             hintClicks++
@@ -185,4 +186,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
